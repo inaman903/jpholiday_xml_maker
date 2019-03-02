@@ -2,8 +2,7 @@
 指定期間内の日本の祝日の一覧をXMLで出力します
 
 ## require
-- pip install holiday-jp
-- pip install zenhan
+- pip install holidays-jp
 - pip install python-dateutil
 
 ## usage

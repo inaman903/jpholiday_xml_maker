@@ -2,7 +2,7 @@ import sys
 import xml.dom.minidom
 from dateutil.parser import parse as parse_date
 from datetime import datetime, date, timedelta
-from holiday_jp import HolidayJp
+from holidays_jp import CountryHolidays
 
 
 def main():
@@ -19,7 +19,12 @@ def main():
         end = parse_date(args[2]).date()
     except:
         pass
-    holidays = HolidayJp.between(start, end)
+    if (start.year > end.year):
+        start, end = end, start
+
+    holidays = filter(
+        lambda holiday: start <= holiday[0].date() <= end,
+        CountryHolidays.between('JP', start.year, end.year))
 
     dom = xml.dom.minidom.Document()
     root = dom.createElement('holidays')
@@ -29,8 +34,8 @@ def main():
 
     for holiday in holidays:
         node = dom.createElement('holiday')
-        node.setAttribute('date', holiday.date_obj.strftime('%Y/%m/%d'))
-        node.setAttribute('name', holiday.name)
+        node.setAttribute('date', holiday[0].strftime('%Y/%m/%d'))
+        node.setAttribute('name', holiday[1])
         root.appendChild(node)
 
     print(dom.toprettyxml())
